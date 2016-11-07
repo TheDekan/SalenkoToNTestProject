@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html ng-app="clients">
+<head>
+    <title>ClientProj</title>
+
+    <link rel="stylesheet" href="lib/dependencies/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/dependencies/css/ng-grid.min.css" />
+ 
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  
+    <script src="lib/dependencies/angular.min.js"></script>
+    <script src="lib/dependencies/angular-resource.min.js"></script>
+    <script src="lib/dependencies/jquery.min.js"></script>
+    <script src="lib/dependencies/ui-bootstrap-tpls.min.js"></script>
+    <script src="lib/dependencies/ng-grid.min.js"></script>
+  
+    <script src="script/client.js"></script>
+ 
+</head>
+
+<body>
+
+<div id="wrapper">
+    <ul class="menu">
+        <li><a href="/SalenkoToNTestProj/">Visits</a></li>
+        <li><a href="/SalenkoToNTestProj/clients.html">Clients</a></li>
+        <li><a href="/SalenkoToNTestProj/places.html">Places</a></li>
+    </ul>
+    <hr class="" />
+    <div ng-view=""></div>
+</div>
+
+
+<h1>Clients</h1>
+
+<br/>
+
+<div class="message" ng-controller="alertMessagesController">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+
+<br>
+
+<div class="grid" ng-controller="clientsListController">
+    <div>
+        <h3>Client List</h3>
+    </div>
+
+    <div class="gridStyle" ng-grid="gridOptions"></div>
+
+    <pagination direction-links="true" boundary-links="true"
+                total-items="clients.totalResults" items-per-page="clients.pageSize"
+                ng-model="clients.currentPage" ng-change="refreshGrid()">
+    </pagination>
+</div>
+
+<div class="form" ng-controller="clientsFormController">
+    <div ng-if="client.id == null">
+        <h3>Add row</h3>
+    </div>
+    <div ng-if="client.id != null">
+        <h3>Edit row</h3>
+    </div>
+
+    <div>
+        <form name="clientForm" ng-submit="updateClient()" novalidate>
+
+            <div class="form-group" ng-class="{'has-error' : clientForm.name.$invalid && clientForm.name.$dirty}">
+                <label for="name">Name:</label>
+                <span ng-class="{'glyphicon glyphicon-ok' : clientForm.name.$valid && clientForm.name.$dirty}"></span>
+
+                <input id="name" name="name" type="text" class="form-control" maxlength="50"
+                       ng-model="client.name"
+                       required ng-minlength="4" ng-maxlength="50"/>
+
+                <p class="help-block" ng-show="clientForm.name.$error.required">Add name.</p>
+                <p class="help-block" ng-show="clientForm.name.$error.minlength">FIO must be at least 4 characters long.</p>
+                <p class="help-block" ng-show="clientForm.name.$error.maxlength">FIO cannot be longer than 50 characters.</p>
+            </div>
+
+            <div class="form-group" ng-class="{'has-error' : clientForm.phone.$invalid && clientForm.phone.$dirty}">
+                <label for="phone">Phone:</label>
+                <span ng-class="{'glyphicon glyphicon-ok' : clientForm.phone.$valid && clientForm.phone.$dirty}"></span>
+
+                <input id="phone" name="phone" type="text" class="form-control" maxlength="100"
+                       ng-model="client.phone"
+                       required ng-pattern="/^[0-9]*$/">
+
+                <p class="help-block" ng-show="clientForm.phone.$error.required">Add phone.</p>
+                <p class="help-block" ng-show="clientForm.phone.$error.pattern">Input Integer.</p>
+            </div>            
+            
+            <div class="buttons">
+                <button type="button" class="btn btn-primary" ng-click="clearForm()">Clear</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="clientForm.$invalid">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

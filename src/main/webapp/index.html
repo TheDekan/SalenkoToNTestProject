@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html ng-app="visits">
+<head>
+    <title>VisitProj</title>
+
+    <link rel="stylesheet" href="lib/dependencies/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="lib/dependencies/css/ng-grid.min.css" />
+ 
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+
+    <script src="lib/dependencies/angular.min.js"></script>
+    <script src="lib/dependencies/angular-resource.min.js"></script>
+    <script src="lib/dependencies/jquery.min.js"></script>
+    <script src="lib/dependencies/ui-bootstrap-tpls.min.js"></script>
+    <script src="lib/dependencies/ng-grid.min.js"></script>
+
+    <script src="script/visit.js"></script>
+    
+</head>
+
+<body>
+
+<div id="wrapper">
+    <ul class="menu">
+        <li><a href="/SalenkoToNTestProj/">Visits</a></li>
+        <li><a href="/SalenkoToNTestProj/clients.html">Clients</a></li>
+        <li><a href="/SalenkoToNTestProj/places.html">Places</a></li>
+    </ul>
+    <hr class="" />
+    <div ng-view=""></div>
+</div>
+
+<h1>Visits</h1>
+
+<br/>
+
+<div class="message" ng-controller="alertMessagesController">
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+
+<br>
+
+<div class="grid" ng-controller="visitsListController">
+    <div>
+        <h3>Visit List (Visit Time - 1 Hour)</h3>
+    </div>
+
+    <div class="gridStyle" ng-grid="gridOptions"></div>
+
+    <pagination direction-links="true" boundary-links="true"
+                total-items="visits.totalResults" items-per-page="visits.pageSize"
+                ng-model="visits.currentPage" ng-change="refreshGrid()">
+    </pagination>
+</div>
+
+<div class="form" ng-controller="visitsFormController">
+    <div ng-if="visit.id == null">
+        <h3>Add row</h3>
+    </div>
+    <div ng-if="visit.id != null">
+        <h3>Edit row</h3>
+    </div>
+
+    <div>
+        <form name="visitForm" ng-submit="updateVisit()" novalidate>
+
+            <div class="form-group" ng-class="{'has-error' : visitForm.placeId.$invalid && visitForm.placeId.$dirty}">
+                <label for="placeId">Address:</label>
+                <span ng-class="{'glyphicon glyphicon-ok' : visitForm.placeId.$valid && visitForm.placeId.$dirty}"></span>
+
+            	<select
+				  id="address" name="placeId" class="form-control" ng-model="visit.placeId" required>
+				  <option ng-repeat="item in placeList" ng-value="item.id" ng-model="visit.placeId">
+				  {{item.address}}				  
+				  </option>
+				</select>
+               
+            </div>
+
+            <div class="form-group" ng-class="{'has-error' : visitForm.visitTime.$invalid && visitForm.visitTime.$dirty}">
+                <label for="visitTime">VisitTime:</label>
+                <span ng-class="{'glyphicon glyphicon-ok' : visitForm.visitTime.$valid && visitForm.visitTime.$dirty}"></span>
+
+                <input id="visitTime" name="visitTime" type="text" class="form-control" maxlength="100"
+                       ng-model="visit.visitTime" required ng-pattern="/^[2][0][0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|[1-2][0-4])$/" > 
+
+                <p class="help-block" ng-show="{visitForm.visitTime.$error.required && visitForm.visitTime.$error.pattern">Input date in next format: year-month-day-hour(20**-**-**-**).</p>
+            
+            </div>            
+            
+            <div class="buttons">
+                <button type="button" class="btn btn-primary" ng-click="clearForm()">Clear</button>
+                <button type="submit" class="btn btn-primary" ng-disabled="visitForm.$invalid">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
