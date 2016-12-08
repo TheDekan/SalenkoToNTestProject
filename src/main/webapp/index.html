@@ -82,7 +82,7 @@
                 <span ng-class="{'glyphicon glyphicon-ok' : visitForm.visitTime.$valid && visitForm.visitTime.$dirty}"></span>
 
                 <input id="visitTime" name="visitTime" type="text" class="form-control" maxlength="100"
-                       ng-model="visit.visitTime" required ng-pattern="/^[2][0][0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|[1-2][0-4])$/" > 
+                       ng-model="visit.visitTime" required ng-pattern="/^[2][0][0-9][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-9]|2[0-4])$/" > 
 
                 <p class="help-block" ng-show="{visitForm.visitTime.$error.required && visitForm.visitTime.$error.pattern">Input date in next format: year-month-day-hour(20**-**-**-**).</p>
             
